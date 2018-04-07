@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 pywversion="2.2"
-never_update=False
+never_update=True
 
 #
 # jackjack's pywallet.py
@@ -80,10 +80,12 @@ passphrase = ""
 global_merging_message = ["",""]
 
 balance_site = 'https://blockchain.info/q/addressbalance/'
+//balance_site = 'FFC EXPLORER' //FFC COMING SOON
 aversions = {};
 for i in range(256):
 	aversions[i] = "version %d" % i;
 aversions[0] = 'Bitcoin';
+aversions[36] = 'FireFlyCoin';
 aversions[48] = 'Litecoin';
 aversions[52] = 'Namecoin';
 aversions[111] = 'Testnet';
@@ -782,7 +784,7 @@ class Crypter_ssl(object):
 		ctx = ssl.EVP_CIPHER_CTX_new()
 		ssl.EVP_CIPHER_CTX_init(ctx)
 		ssl.EVP_EncryptInit_ex(ctx, ssl.EVP_aes_256_cbc(), None, self.chKey, self.chIV)
-		ssl.EVP_EncryptUpdate(ctx, buf, ctypes.byref(written), data, len(data))
+		ssl.EVP_Encrypt(ctx, buf, ctypes.byref(written), data, len(data))
 		output = buf.raw[:written.value]
 		ssl.EVP_EncryptFinal_ex(ctx, buf, ctypes.byref(final))
 		output += buf.raw[:final.value]
@@ -853,7 +855,7 @@ try:
 except:
 	print "Python 3 is not supported, you need Python 2.7.x"
 	exit(1)
-_r = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141L
+_r = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AFfA03BBFD25E8CD0364141L
 _b = 0x0000000000000000000000000000000000000000000000000000000000000007L
 _a = 0x0000000000000000000000000000000000000000000000000000000000000000L
 _Gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798L
@@ -1229,6 +1231,8 @@ def SecretToASecret(secret, compressed=False):
 	prefix = chr((addrtype+128)&255)
 	if addrtype==48:  #assuming Litecoin
 		prefix = chr(128)
+	if addrtype==36:  #assuming FireFlyCoin
+		prefix = chr(224)
 	vchIn = prefix + secret
 	if compressed: vchIn += '\01'
 	return EncodeBase58Check(vchIn)
